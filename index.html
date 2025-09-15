@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="description" content="HCM-Út - Cơm tấm & ăn vặt chuẩn vị Sài Gòn tại KonTum. Ngon, nhanh, giá hợp lý. Gọi ngay: 0982541728">
+    <meta name="keywords" content="cơm tấm KonTum, ăn vặt KonTum, cơm sườn bì chả, HCM-Út, quán cơm ngon KonTum">
+    <title>HCM-Út - Cơm Tấm & Ăn Vặt KonTum</title>
+
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="https://lh3.googleusercontent.com/sgi-eph/AOoJaQO9oXbXm_eo4RM2kk_LKbq9FVZ9yi7M89t6Wc-XUtgWZHbIJo-sk_F0EwDrzywOXhB7XifOUa-wNpGhGVj2UEf1P8ZhkusYinzOvWbLobKhlyWXkungCLQktKBjwVdcWJrR39xxJh1Os05HqsisoGhyX67XQkCs0Ao=s925" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="https://bongbeobread.site/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bongbeobread.site/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://bongbeobread.site/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="https://bongbeobread.site/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="https://bongbeobread.site/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Particle.js CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- Tilt.js for 3D Parallax Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.2.1/tilt.jquery.min.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="https://bongbeobread.site/assets/css/main.css" rel="stylesheet">
+
+    <!-- Custom CSS for VIP Effects -->
+    <style>
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #preloader img {
+            width: 120px;
+            animation: pulse 1.5s infinite, glow 2s infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)); }
+            100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+        }
+
+        /* Parallax Effect for Hero */
+        #hero {
+            background: url('https://sakos.vn/wp-content/uploads/2024/10/bia-4.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+        #hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Particle Animation */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Card Hover Effects with Parallax Tilt and Glow */
+        .card {
+            position: relative;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+            border-radius: 15px;
+            background: #fff;
+        }
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+        .card img {
+            transition: transform 0.4s ease, filter 0.4s ease;
+            object-fit: cover;
+            height: 200px;
+        }
+        .card:hover img {
+            transform: scale(1.15);
+            filter: brightness(1.1);
+        }
+        .card .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card .btn:hover {
+            background: linear-gradient(45deg, #ff8e53, #ff6b6b);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .card .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+        .card .btn:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Button VIP Effects */
+        .btn-get-started, .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-get-started:hover, .btn-primary:hover {
+            background: linear-gradient(45deg, #ff8e53, #ff6b6b);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        .btn-get-started::after, .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+        .btn-get-started:hover::after, .btn-primary:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Footer Social Links */
+        .social-links a {
+            transition: all 0.3s ease;
+            background: #fff;
+            color: #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .social-links a:hover {
+            background: #ff6b6b;
+            color: #fff;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+        }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Card Particle Effect Wrapper */
+        .card-particle-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .card-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+
+    <!-- CDN Ajax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body class="index-page">
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="https://lh3.googleusercontent.com/sgi-eph/AOoJaQO9oXbXm_eo4RM2kk_LKbq9FVZ9yi7M89t6Wc-XUtgWZHbIJo-sk_F0EwDrzywOXhB7XifOUa-wNpGhGVj2UEf1P8ZhkusYinzOvWbLobKhlyWXkungCLQktKBjwVdcWJrR39xxJh1Os05HqsisoGhyX67XQkCs0Ao=s925" alt="HCM-Út Logo">
+    </div>
+
+    <!-- Thông báo thêm giỏ hàng AJAX -->
+    <div id="message-ajax"></div>
+
+    <header id="header" class="header d-flex align-items-center sticky-top py-2">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="#" class="logo d-flex align-items-center justify-content-center justify-content-lg-start">
+                <img width="80" src="https://lh3.googleusercontent.com/sgi-eph/AOoJaQO9oXbXm_eo4RM2kk_LKbq9FVZ9yi7M89t6Wc-XUtgWZHbIJo-sk_F0EwDrzywOXhB7XifOUa-wNpGhGVj2UEf1P8ZhkusYinzOvWbLobKhlyWXkungCLQktKBjwVdcWJrR39xxJh1Os05HqsisoGhyX67XQkCs0Ao=s925" alt="HCM-Út Logo">
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <i class="mobile-nav-toggle d-xl-none bi bi-list ms-2"></i>
+                <ul>
+                    <li><a href="#" class="active">Trang chủ</a></li>
+                    <li><a href="/thuc-don">Thực đơn</a></li>
+                    <li><a href="#about">Về chúng tôi</a></li>
+                    <li><a href="#contact">Liên hệ</a></li>
+                    <span class="d-inline d-lg-none">
+                        <li><a class="justify-content-start dropdown-item" href="#">Đăng nhập</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                    </span>
+                </ul>
+            </nav>
+
+            <div class="d-flex button-cart align-items-center">
+                <div class="d-none d-lg-inline">
+                    <div class="dropdown">
+                        <a class="btn-getstarted" href="#"><i class="bi bi-person"></i><span class="ms-2 d-lg-inline d-none">Đăng nhập</span></a>
+                    </div>
+                </div>
+                <button type="button" class="ms-lg-2 btn rounded-circle btn-primary position-relative" data-bs-toggle="offcanvas" data-bs-target="#cartCanvas" aria-controls="cartCanvas">
+                    <i class="bi bi-basket"></i>
+                    <span id="count-cart" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        12
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Canvas Cart with AJAX -->
+    <div class="cart-item offcanvas offcanvas-end" tabindex="-1" id="cartCanvas" aria-labelledby="offcanvasRightLabel"></div>
+
+    <main class="main">
+        <!-- Hero Section with Parallax and Particles -->
+        <section id="hero" class="hero section light-background">
+            <div id="particles-js"></div>
+            <div class="container">
+                <div class="row gy-4 justify-content-center justify-content-lg-between">
+                    <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                        <h1 data-aos="fade-up">HCM-Út KonTum</h1>
+                        <p data-aos="fade-up" data-aos-delay="100">Thương hiệu Cơm tấm & Ăn vặt chuẩn vị Sài Gòn từ 2025</p>
+                        <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
+                            <a href="/thuc-don" class="btn-get-started me-2">Mua ngay</a>
+                            <a href="#contact" class="btn btn-outline-primary">Liên hệ</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 order-1 order-lg-2 hero-img" data-aos="zoom-out">
+                        <img src="https://sakos.vn/wp-content/uploads/2024/10/bia-4.jpg" class="img-fluid animated" alt="Cơm tấm HCM-Út" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section><!-- /Hero Section -->
+
+        <!-- Menu Section -->
+        <section id="menu" class="menu section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Thực đơn nổi bật</h2>
+                <p>Khám phá các món ăn đặc trưng tại HCM-Út</p>
+            </div>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card card-particle-wrapper" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000">
+                            <div class="card-particles" id="card-particles-1"></div>
+                            <img src="https://vinbarista.com/uploads/news/cach-pha-ca-phe-phin-nho-va-lon-ngon-dam-da-202409201151.jpg" class="card-img-top" alt="Cơm tấm sườn bì chả">
+                            <div class="card-body">
+                                <h5 class="card-title">Cơm tấm sườn bì chả</h5>
+                                <p class="card-text">Cơm tấm dẻo thơm, sườn nướng vàng ươm, bì giòn tan và chả trứng mềm mịn. Giá: Cập nhật vào ngày 22/09</p>
+                                <a href="/thuc-don" class="btn btn-primary">Thêm vào giỏ</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="card card-particle-wrapper" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000">
+                            <div class="card-particles" id="card-particles-2"></div>
+                            <img src="https://trahoatanuc.tamnghiathemes.com/wp-content/uploads/2023/07/tra-tac.jpg" class="card-img-top" alt="Trà tắc">
+                            <div class="card-body">
+                                <h5 class="card-title">Trà tắc</h5>
+                                <p class="card-text">Trà tắc mát lạnh, chua ngọt tự nhiên, giải nhiệt tức thì. Giá: Cập nhật vào ngày 22/09</p>
+                                <a href="/thuc-don" class="btn btn-primary">Thêm vào giỏ</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="card card-particle-wrapper" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000">
+                            <div class="card-particles" id="card-particles-3"></div>
+                            <img src="https://i.ytimg.com/vi/dZwJgX-IcH8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC38hYKpTlqHzCnJl-zQ7256hCeQQ" class="card-img-top" alt="Bánh tráng">
+                            <div class="card-body">
+                                <h5 class="card-title">Bánh tráng trộn</h5>
+                                <p class="card-text">Bánh tráng trộn cay giòn, đậm đà hương vị đường phố Sài Gòn. Giá: Cập nhật vào ngày 22/09</p>
+                                <a href="/thuc-don" class="btn btn-primary">Thêm vào giỏ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /Menu Section -->
+
+        <!-- About Section -->
+        <section id="about" class="about section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Về chúng tôi</h2>
+                <p>HCM-Út <span class="description-title">KonTum</span></p>
+            </div>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+                        <img src="https://vinbarista.com/uploads/news/cach-pha-ca-phe-phin-nho-va-lon-ngon-dam-da-202409201151.jpg" class="img-fluid mb-4" alt="HCM-Út" loading="lazy">
+                    </div>
+                    <div class="col-lg-5" data-aos="fade-up" data-aos-delay="250">
+                        <div class="content ps-0 ps-lg-5">
+                            <p class="fst-italic">
+                                Tại HCM-Út, chúng tôi mang đến trải nghiệm ẩm thực đặc biệt với cơm tấm chuẩn vị Sài Gòn và các món ăn vặt độc đáo.
+                            </p>
+                            <ul>
+                                <li><i class="bi bi-check-circle-fill"></i> Cơm tấm sườn bì chả thơm ngon, chuẩn vị.</li>
+                                <li><i class="bi bi-check-circle-fill"></i> Nguyên liệu tươi mới, chế biến tại chỗ.</li>
+                                <li><i class="bi bi-check-circle-fill"></i> Đa dạng món ăn vặt: bánh tráng, trà tắc...</li>
+                            </ul>
+                            <p>
+                                Ghé HCM-Út để thưởng thức hương vị truyền thống, no nê và tràn đầy năng lượng!
+                            </p>
+                            <div class="position-relative mt-4">
+                                <div class="book-a-table">
+                                    <h3>Hotline đặt hàng</h3>
+                                    <p>0982541728</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /About Section -->
+
+        <!-- Why Us Section -->
+        <section id="why-us" class="why-us section light-background">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="why-box">
+                            <h3>Vì sao chọn HCM-Út</h3>
+                            <p>
+                                HCM-Út mang đến cơm tấm chuẩn vị Sài Gòn và các món ăn vặt đậm chất đường phố. Chất lượng, giá cả hợp lý và dịch vụ tận tâm.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 d-flex align-items-stretch">
+                        <div class="row gy-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="col-xl-4">
+                                <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                                    <i class="bi bi-clipboard-data"></i>
+                                    <h4>Dịch vụ tối ưu</h4>
+                                    <p>Đặt hàng nhanh qua hotline hoặc online, giao hàng tận nơi trong thời gian ngắn.</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-4" data-aos="fade-up" data-aos-delay="300">
+                                <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                                    <i class="bi bi-gem"></i>
+                                    <h4>Giá cả hợp lý</h4>
+                                    <p>Giá cả phải chăng, phù hợp với mọi đối tượng, đảm bảo ngon và đầy đặn.</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-4" data-aos="fade-up" data-aos-delay="400">
+                                <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                                    <i class="bi bi-inboxes"></i>
+                                    <h4>Hương vị truyền thống</h4>
+                                    <p>Cơm tấm và món ăn vặt được chế biến theo phong cách Sài Gòn, đậm đà và khó quên.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /Why Us Section -->
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Liên hệ</h2>
+                <p>Liên hệ với chúng tôi để đặt hàng hoặc nhận tư vấn</p>
+            </div>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-6">
+                        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-geo-alt flex-shrink-0"></i>
+                            <div>
+                                <h3>Địa chỉ</h3>
+                                <p>Thôn 5, xã Đoàn Kết / Thôn 5, xã Jachim, TP. KonTum</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-telephone flex-shrink-0"></i>
+                            <div>
+                                <h3>Liên hệ</h3>
+                                <p><strong>Phone:</strong> 0982541728<br><strong>Email:</strong> giabaotranle56@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /Contact Section -->
+    </main>
+
+    <footer id="footer" class="footer dark-background pb-3">
+        <div class="container">
+            <div class="row gy-3">
+                <div class="col-lg-3 col-md-6 d-flex">
+                    <i class="bi bi-geo-alt icon"></i>
+                    <div class="address">
+                        <h4>Địa chỉ</h4>
+                        <p>Thôn 5, xã Đoàn Kết / Thôn 5, xã Jachim</p>
+                        <p>Thành phố KonTum</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 d-flex">
+                    <i class="bi bi-telephone icon"></i>
+                    <div>
+                        <h4>Liên hệ</h4>
+                        <p>
+                            <strong>Phone:</strong> <span>0982541728</span><br>
+                            <strong>Email:</strong> <span>giabaotranle56@gmail.com</span><br>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 d-flex">
+                    <i class="bi bi-clock icon"></i>
+                    <div>
+                        <h4>Giờ mở cửa</h4>
+                        <p><strong>Thứ 2 - CN:</strong> Cả ngày</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4>Theo dõi</h4>
+                    <div class="social-links d-flex">
+                        <a href="https://www.facebook.com/gia.bao.tranle.2025?locale=vi_VN" target="_blank" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="https://wa.me/0982541728" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container copyright text-center mt-4">
+            <p>© 2025 - <span>Bản quyền thuộc</span><strong class="px-1 sitename">HCM-Út</strong></p>
+        </div>
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="https://bongbeobread.site/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://bongbeobread.site/assets/vendor/php-email-form/validate.js"></script>
+    <script src="https://bongbeobread.site/assets/vendor/aos/aos.js"></script>
+    <script src="https://bongbeobread.site/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="https://bongbeobread.site/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="https://bongbeobread.site/assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="https://bongbeobread.site/assets/js/main.js"></script>
+    <!-- AJAX JS File -->
+    <script src="https://bongbeobread.site/assets/js/ajax.js"></script>
+
+    <!-- JavaScript for Preloader, Particle Effects, and Tilt -->
+    <script>
+        // Preloader
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        });
+
+        // Smooth Scroll
+        $(document).ready(function() {
+            $('a[href*="#"]').on('click', function(event) {
+                if (this.hash !== "") {
+                    event.preventDefault();
+                    var hash = this.hash;
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top - 70
+                    }, 800);
+                }
+            });
+
+            // Initialize Tilt.js for 3D parallax effect on cards
+            $('.card').tilt({
+                maxTilt: 15,
+                perspective: 1000,
+                easing: "cubic-bezier(.03,.98,.52,.99)",
+                speed: 400,
+                glare: true,
+                maxGlare: 0.3
+            });
+        });
+
+        // Particle.js Configuration for Hero Section
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ff6b6b"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false
+                },
+                "size": {
+                    "value": 3,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ff6b6b",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+
+        // Particle.js Configuration for Card Particles
+        ['card-particles-1', 'card-particles-2', 'card-particles-3'].forEach(function(id) {
+            particlesJS(id, {
+                "particles": {
+                    "number": {
+                        "value": 20,
+                        "density": {
+                            "enable": true,
+                            "value_area": 400
+                        }
+                    },
+                    "color": {
+                        "value": "#ff8e53"
+                    },
+                    "shape": {
+                        "type": "star",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.6,
+                        "random": true
+                    },
+                    "size": {
+                        "value": 2,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": false
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 3,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "bubble"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "bubble": {
+                            "distance": 100,
+                            "size": 4,
+                            "duration": 2,
+                            "opacity": 0.8
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+    </script>
+</body>
+</html>
