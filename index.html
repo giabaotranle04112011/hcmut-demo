@@ -153,6 +153,23 @@
             box-shadow: 0 10px 30px rgba(2,6,23,0.2);
             font-weight: 600;
         }
+        /* Cart panel styles */
+        #cartOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;z-index:110;transition:opacity .2s}
+        #cartOverlay.show{display:block}
+        #cartPanel{position:fixed;right:0;top:0;height:100%;width:380px;max-width:94vw;background:#fff;color:#0b1220;box-shadow:-20px 0 60px rgba(2,6,23,0.16);transform:translateX(110%);transition:transform .36s cubic-bezier(.2,.9,.3,1);z-index:120;display:flex;flex-direction:column}
+        #cartPanel.open{transform:translateX(0)}
+        #cartPanel header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #eee}
+        #cartList{padding:12px 16px;overflow:auto;flex:1}
+        .cart-item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6}
+        .cart-item img{width:68px;height:54px;object-fit:cover;border-radius:8px}
+        .cart-item .meta{flex:1}
+        .qty-controls{display:inline-flex;align-items:center;gap:6px;background:#f8fafc;padding:4px;border-radius:8px}
+        .qty-btn{cursor:pointer;padding:6px;border-radius:6px;border:1px solid rgba(0,0,0,0.06);background:#fff}
+        .cart-footer{padding:14px 16px;border-top:1px solid #eee}
+        .cart-footer .total{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px}
+        .small-muted{color:#6b7280;font-size:.95rem}
+        .checkout-form input, .checkout-form textarea{width:100%;padding:8px;border:1px solid #e6e9ef;border-radius:8px;margin-bottom:8px}
+        @media (max-width:480px){#cartPanel{width:92vw}}
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
         }
@@ -179,7 +196,7 @@
                 <button class="md:hidden">
                     <i data-feather="menu"></i>
                 </button>
-                <button class="bg-amber-600 text-white px-4 py-2 rounded-full flex items-center hover:bg-amber-700">
+                <button class="bg-amber-600 text-white px-4 py-2 rounded-full flex items-center hover:bg-amber-700" id="openCart">
                     <i data-feather="shopping-cart" class="mr-2"></i>
                     <span>Đặt món</span>
                 </button>
@@ -411,6 +428,48 @@
         </div>
     </footer>
 
+    <!-- Cart Panel (off-canvas) -->
+    <div id="cartOverlay" aria-hidden="true"></div>
+
+<aside id="cartPanel" aria-hidden="true" aria-label="Giỏ hàng">
+  <header>
+    <div>
+      <strong>Giỏ hàng</strong>
+      <div class="small-muted" id="cartCountSummary">0 món</div>
+    </div>
+    <button id="closeCartBtn" aria-label="Đóng giỏ hàng">&times;</button>
+  </header>
+
+  <div id="cartList" role="list" aria-live="polite">
+    <!-- items will be rendered here -->
+  </div>
+
+  <div class="cart-footer">
+    <div class="total">
+      <div>Tổng</div>
+      <div id="cartTotal">0 VNĐ</div>
+    </div>
+    <div class="small-muted mb-3">Nhập thông tin giao hàng để thanh toán</div>
+
+    <div id="checkoutArea" class="checkout-form" style="display:none">
+      <input id="custName" type="text" placeholder="Họ tên" />
+      <input id="custPhone" type="tel" placeholder="Số điện thoại" />
+      <input id="custAddress" type="text" placeholder="Địa chỉ nhận hàng" />
+      <textarea id="custNote" rows="2" placeholder="Ghi chú (không bắt buộc)"></textarea>
+      <button id="confirmOrderBtn" class="btn-cta w-full py-2">Xác nhận & Thanh toán</button>
+      <button id="cancelCheckoutBtn" class="btn-ghost w-full py-2 mt-2">Quay lại giỏ hàng</button>
+    </div>
+
+    <div id="cartActions" style="display:block">
+      <button id="openCheckoutBtn" class="btn-cta w-full py-2">Thanh toán</button>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="clearCartBtn" class="btn-ghost flex-1 py-2">Xóa hết</button>
+        <button id="closeCartBtn2" class="btn-ghost flex-1 py-2">Đóng</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
     <!-- Vendor JS -->
     <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -443,45 +502,204 @@
             });
         });
 
-        // Cart implementation
+        // --- Enhanced cart logic ---
         let cart = JSON.parse(localStorage.getItem('site_cart') || '[]');
-        function cartCount(){ return cart.reduce((s, i) => s + i.qty, 0); }
+
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartPanel = document.getElementById('cartPanel');
+        const cartList = document.getElementById('cartList');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const cartCountSummary = document.getElementById('cartCountSummary');
+        const openCheckoutBtn = document.getElementById('openCheckoutBtn');
+        const checkoutArea = document.getElementById('checkoutArea');
+        const cartActions = document.getElementById('cartActions');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        const closeCartBtn2 = document.getElementById('closeCartBtn2');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+        const cancelCheckoutBtn = document.getElementById('cancelCheckoutBtn');
+
         function saveCart(){
             localStorage.setItem('site_cart', JSON.stringify(cart));
+            renderCart();
             updateCartBadge();
         }
+
+        function currency(v){ return v.toLocaleString('vi-VN') + ' VNĐ'; }
+
         function updateCartBadge(){
-            const orderBtn = document.querySelector('button:has(i[data-feather="shopping-cart"])');
-            if(!orderBtn) return;
-            let badge = orderBtn.querySelector('.cart-badge');
-            if(!badge){
-                badge = document.createElement('span');
-                badge.className = 'cart-badge ml-2 inline-block bg-red-600 text-white text-xs px-2 py-0.5 rounded-full';
-                orderBtn.appendChild(badge);
+            // Prefer the explicit button id to find the cart/open button (more compatible than :has)
+            const orderBtn = document.getElementById('openCart') || document.querySelector('button[data-cart-open]');
+             if(!orderBtn) return;
+             let badge = orderBtn.querySelector('.cart-badge');
+             if(!badge){
+                 badge = document.createElement('span');
+                 badge.className = 'cart-badge ml-2 inline-block bg-red-600 text-white text-xs px-2 py-0.5 rounded-full';
+                 orderBtn.appendChild(badge);
+             }
+             badge.textContent = cart.reduce((s,i)=>s+i.qty,0);
+             badge.style.display = cart.length ? 'inline-block' : 'none';
+         }
+
+        function renderCart(){
+            cartList.innerHTML = '';
+            if(!cart.length){
+                cartList.innerHTML = '<div class="p-6 small-muted">Giỏ hàng trống. Thêm món để bắt đầu.</div>';
+                cartTotalEl.textContent = currency(0);
+                cartCountSummary.textContent = '0 món';
+                return;
             }
-            badge.textContent = cartCount();
-            badge.style.display = cartCount() ? 'inline-block' : 'none';
+
+            let total = 0;
+            cart.forEach((item, idx) => {
+                total += item.price * item.qty;
+                const li = document.createElement('div');
+                li.className = 'cart-item';
+                li.innerHTML = `
+                    <img src="${item.img||''}" alt="${item.name}">
+                    <div class="meta">
+                      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                        <div><strong>${item.name}</strong><div class="small-muted">${item.variant||''}</div></div>
+                        <div style="text-align:right">${currency(item.price * item.qty)}</div>
+                      </div>
+                      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+                        <div class="qty-controls">
+                          <button class="qty-btn" data-action="dec" data-idx="${idx}">-</button>
+                          <div style="min-width:26px;text-align:center">${item.qty}</div>
+                          <button class="qty-btn" data-action="inc" data-idx="${idx}">+</button>
+                        </div>
+                        <button class="qty-btn" style="background:transparent;border:none;color:#ef4444" data-action="remove" data-idx="${idx}" aria-label="Xóa">X</button>
+                      </div>
+                    </div>
+                `;
+                cartList.appendChild(li);
+            });
+
+            cartTotalEl.textContent = currency(total);
+            cartCountSummary.textContent = `${cart.reduce((s,i)=>s+i.qty,0)} món`;
         }
-        window.addToCart = function(name, price){
-            const item = cart.find(i => i.name === name);
-            if(item) item.qty++;
-            else cart.push({name, price, qty: 1});
+
+        // Delegated cart list actions
+        cartList.addEventListener('click', function(e){
+            const btn = e.target.closest('[data-action]');
+            if(!btn) return;
+            const action = btn.getAttribute('data-action');
+            const idx = Number(btn.getAttribute('data-idx'));
+            if(isNaN(idx)) return;
+            if(action === 'inc') cart[idx].qty++;
+            if(action === 'dec') { cart[idx].qty = Math.max(1, cart[idx].qty - 1); }
+            if(action === 'remove') cart.splice(idx,1);
+            saveCart();
+        });
+
+        // Open/close cart
+        function openCart(){
+            cartOverlay.classList.add('show');
+            cartPanel.classList.add('open');
+            cartOverlay.setAttribute('aria-hidden','false');
+            cartPanel.setAttribute('aria-hidden','false');
+            renderCart();
+        }
+        function closeCart(){
+            cartOverlay.classList.remove('show');
+            cartPanel.classList.remove('open');
+            cartOverlay.setAttribute('aria-hidden','true');
+            cartPanel.setAttribute('aria-hidden','true');
+            // hide checkout if was open
+            checkoutArea.style.display = 'none';
+            cartActions.style.display = 'block';
+        }
+
+        // wire overlay & close buttons
+        cartOverlay.addEventListener('click', closeCart);
+        if(closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+        if(closeCartBtn2) closeCartBtn2.addEventListener('click', closeCart);
+
+        // clear cart
+        clearCartBtn.addEventListener('click', () => {
+            if(!cart.length) return showToast('Giỏ hàng đã rỗng', '#f59e0b');
+            if(!confirm('Xóa toàn bộ giỏ hàng?')) return;
+            cart = []; saveCart();
+            showToast('Đã xóa toàn bộ giỏ hàng', '#ef4444');
+        });
+
+        // Checkout
+        openCheckoutBtn.addEventListener('click', () => {
+            if(!cart.length){ showToast('Giỏ hàng trống', '#f59e0b'); return; }
+            cartActions.style.display = 'none';
+            checkoutArea.style.display = 'block';
+        });
+
+        cancelCheckoutBtn.addEventListener('click', () => {
+            checkoutArea.style.display = 'none';
+            cartActions.style.display = 'block';
+        });
+
+        confirmOrderBtn.addEventListener('click', () => {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const note = document.getElementById('custNote').value.trim();
+            if(!name || !phone || !address){ showToast('Vui lòng nhập họ tên, số điện thoại và địa chỉ', '#ef4444'); return; }
+
+            // simulate submission
+            confirmOrderBtn.disabled = true;
+            confirmOrderBtn.textContent = 'Đang xử lý...';
+            setTimeout(()=>{
+              const orderId = 'HD' + Date.now().toString().slice(-6);
+              // clear cart
+              cart = [];
+              saveCart();
+              closeCart();
+              showToast('Đặt hàng thành công! Mã: ' + orderId, '#16a34a');
+              // reset checkout UI
+              confirmOrderBtn.disabled = false;
+              confirmOrderBtn.textContent = 'Xác nhận & Thanh toán';
+              document.getElementById('custName').value = '';
+              document.getElementById('custPhone').value = '';
+              document.getElementById('custAddress').value = '';
+              document.getElementById('custNote').value = '';
+            }, 900);
+        });
+
+        // override existing addToCart to include item image and open cart
+        const originalAdd = window.addToCart || function(){};
+        window.addToCart = function(name, price, img){
+            const found = cart.find(i => i.name === name);
+            if(found) found.qty++;
+            else cart.push({name, price: Number(price)||0, qty:1, img: img || ''});
             saveCart();
             showToast(`Đã thêm "${name}" vào giỏ`);
+            openCart(); // open cart for immediate review
         };
 
-        // Attach add-to-cart buttons
+        // reattach click-to-add from food cards (in case existing bindings not present)
         document.querySelectorAll('.food-card button').forEach(btn => {
             btn.addEventListener('click', function(e){
                 const card = this.closest('.food-card');
                 if(!card) return;
                 const title = card.querySelector('h3')?.textContent?.trim() || 'Món ăn';
-                const priceText = card.querySelector('.price')?.textContent?.replace(/[^\d]/g, '') || '0';
-                const price = parseInt(priceText, 10) || 0;
-                window.addToCart(title, price);
-                this.animate([{transform: 'scale(1)'}, {transform: 'scale(1.08)'}, {transform: 'scale(1)'}], {duration: 260, easing: 'ease-out'});
+                const priceText = card.querySelector('.price')?.textContent?.replace(/[^\d]/g,'') || '0';
+                const price = parseInt(priceText,10) || 0;
+                const img = card.querySelector('img')?.src || '';
+                window.addToCart(title, price, img);
+                // small feedback animation
+                this.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}], {duration:220, easing:'ease-out'});
             });
         });
+
+        // initial render/update
+        renderCart();
+        updateCartBadge();
+
+        // make "Đặt món" button open cart (use explicit id for compatibility)
+        const orderBtn = document.getElementById('openCart') || document.querySelector('button[data-cart-open]');
+        if(orderBtn){
+            orderBtn.addEventListener('click', function(e){
+                e.preventDefault();
+                openCart();
+            });
+        }
 
         // Toast notification
         const toast = document.createElement('div');
@@ -506,20 +724,6 @@
             if(window.scrollY > 360) back.style.display = 'flex';
             else back.style.display = 'none';
         });
-
-        // "Đặt món" button scrolls to menu
-        const orderBtn = document.querySelector('button:has(i[data-feather="shopping-cart"])');
-        const menuSec = document.getElementById('menu');
-        if(orderBtn && menuSec){
-            orderBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const top = menuSec.getBoundingClientRect().top + window.pageYOffset - 70;
-                window.scrollTo({top, behavior: prefersReduced ? 'auto' : 'smooth'});
-            });
-        }
-
-        // Restore cart badge
-        updateCartBadge();
     });
     </script>
 </body>
